@@ -141,10 +141,6 @@ export default function Page15() {
 
         {/* Bottom Section */}
         <div className={styles.bottomSection}>
-          <div className={styles.bottomText}>
-            <div className={`hide page15-reveal-4-1`}>这些内容也深深触动了</div>
-            <div className={`hide page15-reveal-4-2`}><span className={styles.highlight}>{interactiveCount}</span> 位伙伴的心</div>
-          </div>
           <div className={`${styles.plusIcon} ${styles.popIn} page15-reveal-5`}>
             <Image
               src="imgs/page15/plus.svg"

@@ -9,7 +9,7 @@ const abhayaLibre = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "2025年年度报告",
+  title: "2025年年度总结",
   description: "这是2025年年度报告的页面",
   icons: {
     icon: "/triple-uni.png",
