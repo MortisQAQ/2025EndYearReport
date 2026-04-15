@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         hostname: "api.uuunnniii.com",
         pathname: "/v4/report2025/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.boatonland.com",
+        pathname: "/**",
+      },
     ],
   },
   typescript: {

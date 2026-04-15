@@ -151,6 +151,16 @@ export default function PageManagerProvider({ children, totalPages = 24 }: { chi
     if (!container) return;
     thresholdPxRef.current = 15; // 提高一点阈值防止误触？保持 15 灵敏度
 
+    // Helper to check if event target is within an ignored element
+    const isIgnored = (target: EventTarget | null) => {
+      let el = target as HTMLElement;
+      while (el && el !== container) {
+        if (el.dataset?.nextIgnore !== undefined) return true;
+        el = el.parentElement as HTMLElement;
+      }
+      return false;
+    };
+
     const attemptNavigation = (direction: 'next' | 'prev') => {
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
@@ -176,6 +186,7 @@ export default function PageManagerProvider({ children, totalPages = 24 }: { chi
     };
 
     const onWheel = (e: WheelEvent) => {
+      if (isIgnored(e.target)) return; // Allow native scroll in ignored areas
       e.preventDefault();
       const now = Date.now();
       if (now < cooldownUntilRef.current) return;
@@ -193,10 +204,16 @@ export default function PageManagerProvider({ children, totalPages = 24 }: { chi
     };
 
     const onTouchStart = (e: TouchEvent) => {
+      if (isIgnored(e.target)) {
+        touchStartYRef.current = null;
+        return;
+      }
       touchStartYRef.current = e.touches[0]?.clientY ?? null;
     };
     
     const onTouchMove = (e: TouchEvent) => {
+      // If we didn't start tracking (because ignored), don't prevent default
+      if (touchStartYRef.current === null) return;
       if (e.cancelable) {
         e.preventDefault();
       }

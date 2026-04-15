@@ -13,7 +13,7 @@ type PageWrapperProps = {
   style?: React.CSSProperties;
 };
 
-export default function PageWrapper({
+export default function   PageWrapper({
   pageNumber,
   onShow,
   autoAppendNext = false,
@@ -85,18 +85,17 @@ export default function PageWrapper({
       id={`page${pageNumber}`}
       ref={ref}
       onClickCapture={handleClickCapture}
-      style={{ width: '100%', height: '100%', ...style }}
-    >
-      <div style={{
+      style={{
         position: 'absolute',
-        top: 'env(safe-area-inset-top, 0px)',
-        bottom: 'env(safe-area-inset-bottom, 0px)',
+        top: 0,
+        bottom: 0,
         left: 0,
         right: 0,
-        width: '100%'
-      }}>
-        {children}
-      </div>
+        width: '100%',
+        ...style
+      }}
+    >
+      {children}
     </div>
   );
 }

@@ -11,8 +11,10 @@ import {
   useMemo,
 } from "react";
 
+import { MOCK_DATA } from "@/utils/mockData";
+
 // 开发阶段使用的默认 Token
-const DEV_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiLpqazmlpnmsLTlk5Tlk5TmnLoiLCJhdWQiOiJDVUhLZXIiLCJpYXQiOjE3NzA2MTcxMDEuMTA4MjYxLCJleHAiOjE3NzEyMjE5MDEuMTA4MjYxLCJ1c2VyX2l0c2MiOiIxMTU1MjExMjI2IiwidXNlcl9zY2hvb2xfbGFiZWwiOiJDVUhLIiwicGxhdGZvcm0iOiJ3ZWNoYXQifQ.ECQlRpQIzjNQpKUQUI8cVVrTqORHR9LDE6IQbVkr-2g"
+const DEV_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiLpqazmlpnmsLTlk5Tlk5TmnLoiLCJhdWQiOiJDVUhLZXIiLCJpYXQiOjE3Njg1NzMwNTMuMDE5OTg1LCJleHAiOjE3NjkxNzc4NTMuMDE5OTg1LCJ1c2VyX2l0c2MiOiIxMTU1MjExMjI2IiwidXNlcl9zY2hvb2xfbGFiZWwiOiJDVUhLIiwicGxhdGZvcm0iOiJ3ZWNoYXQifQ.-x2gFDHACpFVohLB4yLqP8_nZ66KNYtuOXiT2yBUqP4";
 
 // 简单的 JWT 解析函数
 function parseJwt(token: string) {
@@ -115,43 +117,22 @@ export function SummaryProvider({ children }: { children: ReactNode }) {
   }, [data, schoolLabel]);
 
   const fetchSummary = useCallback(async () => {
-    const url = `https:/eo.api.uuunnniii.com//v4/report2025/get.php`;
-
     setIsLoading(true);
     setError(null);
 
     try {
-      // 构建 Form Data
-      const formData = new FormData();
-      formData.append('token', token);
-
-      const res = await fetch(url, { 
-        method: "POST",
-        body: formData 
-      });
+      // 模拟网络延迟
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      const json = (await res.json()) as {
-        code?: number;
-        success?: boolean; // 兼容旧字段
-        data?: SummaryData;
-        msg?: string;
-        message?: string; // 兼容旧字段
-      };
-
-
-      if (json && (json.code === 200 || json.success === true) && json.data) {
-        setData(json.data);
-      } else {
-        const msg = json?.msg || json?.message || "数据格式错误或加载失败";
-        setError(msg);
-      }
+      // 使用模拟数据
+      setData(MOCK_DATA);
     } catch (e) {
       console.error('[SummaryContext] Error:', e);
-      setError("网络请求失败，请检查网络连接");
+      setError("加载失败");
     } finally {
       setIsLoading(false);
     }
-  }, [token]);
+  }, []);
 
   // Mount 时立即请求
   useEffect(() => {

@@ -25,6 +25,27 @@ export default function Page22() {
   
   const lastShownRef = useRef<number | null>(null);
   const timersRef = useRef<NodeJS.Timeout[]>([]);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // 阻止成就卡片的滚动事件冒泡，防止触发翻页
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const stopPropagation = (e: Event) => e.stopPropagation();
+
+    el.addEventListener("wheel", stopPropagation, { passive: true });
+    el.addEventListener("touchstart", stopPropagation, { passive: true });
+    el.addEventListener("touchmove", stopPropagation, { passive: true });
+    el.addEventListener("touchend", stopPropagation, { passive: true });
+
+    return () => {
+      el.removeEventListener("wheel", stopPropagation);
+      el.removeEventListener("touchstart", stopPropagation);
+      el.removeEventListener("touchmove", stopPropagation);
+      el.removeEventListener("touchend", stopPropagation);
+    };
+  }, []);
 
   const clearTimers = () => {
     timersRef.current.forEach(clearTimeout);
@@ -178,8 +199,8 @@ export default function Page22() {
         </div>
 
         {/* Achievement Modal */}
-        <div className={`${styles.modalOverlay} ${selectedYear ? styles.modalActive : ''}`} onClick={handleCloseModal} data-next-ignore>
-          <div className={styles.cardContainer} onClick={e => e.stopPropagation()}>
+        <div className={`${styles.modalOverlay} ${selectedYear ? styles.modalActive : ''}`} onClick={handleCloseModal} data-next-ignore="true">
+          <div className={styles.cardContainer} onClick={e => e.stopPropagation()} ref={cardRef} data-next-ignore="true">
             <div className={styles.cardHeader}>
               <span className={styles.yearTitle}>{selectedYear} 年度成就</span>
               <button className={styles.closeButton} onClick={handleCloseModal}>×</button>
